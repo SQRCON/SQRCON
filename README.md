@@ -5,3 +5,5 @@ SQUAD RCON is a community developed project, designed to empower server admins w
 # Contributions
 
 Contributions to this project are welcome. Please follow the coding standard PSR2 before merging. Please note that the indent has to be 2 spaces instead of PSR2's default 4.
+
+Distributed under the MIT-Style License. See `LICENSE` file for more information.
