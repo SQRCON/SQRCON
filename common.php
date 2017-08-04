@@ -13,6 +13,8 @@
       define('CORE', BASE.DIRECTORY_SEPARATOR.'core');
       define('CACHE', BASE.DIRECTORY_SEPARATOR.'cache');
       
+      define('STEAM_APPID', 393380);
+      
       define('TABLE_PREFIX', '');
       define('URL_SEPARATOR', '/');
       

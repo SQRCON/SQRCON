@@ -54,13 +54,13 @@ class page
     // RENDER RIGHT
 
     echo '</ul>';
-    if (user::authenicated()) {
+    if (user::isauthenicated()) {
       echo '<div class="user-img-box pull-right dropdown">';
       echo '<a class="dropdown-toggle" data-toggle="dropdown" href="#">';
-      echo '<img id="profile-img" class="user-img" src="'.user::get('avatar').'" />';
+      echo '<img id="profile-img" class="user-img" src="'.user::selfread('avatar').'" />';
       echo '</a>';
       echo '<ul class="dropdown-menu" aria-labelledby="usermenu">';
-      echo '<li class="user-name"><a href="'.user::get('profileurl').'" target="_blank"><span class="fa navbar-fa fa-steam" aria-hidden="true"></span> '.rb::get('core.steam_profile', array(user::get('personaname'))).'</a></li>';
+      echo '<li class="user-name"><a href="'.user::selfread('profileurl').'" target="_blank"><span class="fa navbar-fa fa-steam" aria-hidden="true"></span> '.rb::get('core.steam_profile', array(user::selfread('personaname'))).'</a></li>';
       echo '<li role="separator" class="divider"></li>';
       
       if (strlen($_SERVER['QUERY_STRING']) == 0) {

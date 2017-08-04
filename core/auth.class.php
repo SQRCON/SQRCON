@@ -6,9 +6,9 @@
   
     public static function login()
     {
-      if (!user::authenicated()) {
+      if (!user::isauthenicated()) {
         if (cookie::read(auth::$storage) != null) {
-          user::construct(cookie::read(auth::$storage));
+          user::selfconstruct(cookie::read(auth::$storage));
         } else {
           $openid = new LightOpenID($_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
           if (!$openid->mode) {
@@ -24,7 +24,7 @@
               
               $steamid = $matches[1];
               cookie::write(auth::$storage, $steamid);
-              user::construct($steamid);
+              user::selfconstruct($steamid);
               auth::redirect('login');
             }
           }
@@ -36,7 +36,7 @@
     
     public static function logout()
     {
-      user::destroy();
+      user::selfdestroy();
       cookie::delete(auth::$storage);
       session::destroy();
       auth::redirect('logout');
