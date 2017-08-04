@@ -43,7 +43,8 @@
       }
     }
     
-    public static function errorhandler($ex) {
+    public static function errorhandler($ex)
+    {
       echo '<h1>Error detected - '.$ex->getCode().'</h1>';
       echo '<b>Exception:</b> '.$ex->getMessage().'<br>';
       echo '<b>Trace:</b> ';

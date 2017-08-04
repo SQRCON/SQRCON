@@ -1,7 +1,7 @@
 <?php
 
 class cache
-{ 
+{
   public static function write($key, $value, $cache = 24 * 3600)
   {
     $output = CACHE.DIRECTORY_SEPARATOR.md5($key);
