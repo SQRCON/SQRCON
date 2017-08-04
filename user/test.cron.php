@@ -3,7 +3,7 @@
 require_once(dirname(realpath(__FILE__)).DIRECTORY_SEPARATOR.'config.php');
 
 cron::start();
-echo BASE.PHP_EOL;
+echo $_GET['msg'].PHP_EOL;
 cron::end();
 
 ?>

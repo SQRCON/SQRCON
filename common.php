@@ -49,6 +49,26 @@
       }
     }
     
+    public static function run($target)
+    {
+      $offset = strpos($target, '?');
+      if ($offset !== false) {
+        $params = substr($target, $offset+1);
+        $include = substr($target, 0, $offset);
+        foreach (explode('&', $params) as $value) {
+          $parts = explode('=', $value);
+          if (sizeof($parts) == 2) {
+            $_GET[$parts[0]] = $parts[1];
+          } else {
+            $_GET[$parts[0]] = '';
+          }
+        }
+        include($include);
+      } else {
+        include($target);
+      }
+    }
+    
     public static function errorhandler($ex)
     {
       echo '<h1>Error detected - '.$ex->getCode().'</h1>';

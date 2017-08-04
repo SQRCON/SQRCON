@@ -123,22 +123,7 @@ class page
     // RENDER RIGHT
     ksort($menuright);
     foreach ($menuright as $item) {
-      $offset = strpos($item, '?');
-      if ($offset !== false) {
-        $params = substr($item, $offset+1);
-        $include = substr($item, 0, $offset);
-        foreach (explode('&', $params) as $value) {
-          $parts = explode('=', $value);
-          if (sizeof($parts) == 2) {
-            $_GET[$parts[0]] = $parts[1];
-          } else {
-            $_GET[$parts[0]] = '';
-          }
-        }
-        include(BASE.DIRECTORY_SEPARATOR.$include);
-      } else {
-        include(BASE.DIRECTORY_SEPARATOR.$item);
-      }
+      common::run(BASE.DIRECTORY_SEPARATOR.$item);
     }
     echo '</ul>';
     echo '</div>';
@@ -154,22 +139,7 @@ class page
     // RENDER LEFT
     ksort($menuleft);
     foreach ($menuleft as $item) {
-      $offset = strpos($item, '?');
-      if ($offset !== false) {
-        $params = substr($item, $offset+1);
-        $include = substr($item, 0, $offset);
-        foreach (explode('&', $params) as $value) {
-          $parts = explode('=', $value);
-          if (sizeof($parts) == 2) {
-            $_GET[$parts[0]] = $parts[1];
-          } else {
-            $_GET[$parts[0]] = '';
-          }
-        }
-        include(BASE.DIRECTORY_SEPARATOR.$include);
-      } else {
-        include(BASE.DIRECTORY_SEPARATOR.$item);
-      }
+      common::run(BASE.DIRECTORY_SEPARATOR.$item);
     }
     echo '<li><div style="width:10px"></div></li>';
     echo '</ul>';

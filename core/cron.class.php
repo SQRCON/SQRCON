@@ -52,17 +52,14 @@ class cron extends cronlib
         }
 
         if (time() >= $date) {
-          if (isset($job->command) && strlen($job->command) > 0) {
-            $job->command = str_replace('./', $path , $job->command);
+          if (isset($job->target) && strlen($job->target) > 0) {
+            $job->target = $path.$job->target;
             echo date(cron::$format).' Executing Job ID #'.$job->id.' scheduled for '.date(cron::$format, $date).PHP_EOL;
-            $out = '';
-            if(strpos($job->command, 'return') !== false) {
-              $out = cron::call($job->command);
-            } else {
-              $out = implode(' ', cron::exec($job->command));
-            }
+            ob_start();
+            common::run($job->target);
+            $out = ob_get_clean();
             file_put_contents($pid, 'CRON: '.date(cron::$format, $date). ' - JOB: '.strip_tags(trim(preg_replace('/\r\n|\r|\n/', ' ', $out))).PHP_EOL, FILE_APPEND | LOCK_EX);
-            echo date(cron::$format).' Executed Job ID #'.$job->id.' "'.$job->command.'"'.PHP_EOL;
+            echo date(cron::$format).' Executed Job ID #'.$job->id.' "'.$job->target.'"'.PHP_EOL;
           }
         } else {
           echo date(cron::$format).' Skipped Job ID #'.$job->id.' scheduled for '.date(cron::$format, $date).PHP_EOL;

@@ -30,8 +30,8 @@
     {
       "id" : "dosomething",
       "name" : "Some JOB to do",
-      "schedule" : "* * * * *",
-      "command" : "php -f ./test.cron.php"
+      "schedule" : "*/5 * * * *",
+      "target" : "test.cron.php?msg=HELLO"
     }
   ]
 }

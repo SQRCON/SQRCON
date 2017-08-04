@@ -89,22 +89,7 @@ class panel
         echo '<div class="'.implode('-', $tmp).'">';
         ksort($column);
         foreach ($column as $key => $panel) {
-          $offset = strpos($panel, '?');
-          if ($offset !== false) {
-            $params = substr($panel, $offset+1);
-            $include = substr($panel, 0, $offset);
-            foreach (explode('&', $params) as $value) {
-              $parts = explode('=', $value);
-              if (sizeof($parts) == 2) {
-                $_GET[$parts[0]] = $parts[1];
-              } else {
-                $_GET[$parts[0]] = '';
-              }
-            }
-            include($include);
-          } else {
-            include($panel);
-          }
+          common::run($panel);
         }
         echo '</div>';
       }
