@@ -42,15 +42,14 @@ class cron extends cronlib
   {
     if (isset($tmp->cron)) {
       foreach ($tmp->cron as $job) {
-        $pid = CACHE.DIRECTORY_SEPARATOR.$job->id.'.cron.txt';
+        $pid = CACHE.DIRECTORY_SEPARATOR.$job->id.'.cron';
         $date = null;
         if (file_exists($pid)) {
-          $date = cron::next($job->schedule, filemtime($pid));
+          $date = cron::next($job->schedule, filemtime($pid) + 100);
         } else {
           $date = cron::next($job->schedule);
           file_put_contents($pid, '', LOCK_EX);
         }
-
         if (time() >= $date) {
           if (isset($job->target) && strlen($job->target) > 0) {
             $job->target = $path.$job->target;
@@ -58,7 +57,8 @@ class cron extends cronlib
             ob_start();
             common::run($job->target);
             $out = ob_get_clean();
-            file_put_contents($pid, 'CRON: '.date(cron::$format, $date). ' - JOB: '.strip_tags(trim(preg_replace('/\r\n|\r|\n/', ' ', $out))).PHP_EOL, FILE_APPEND | LOCK_EX);
+            touch($pid);
+            echo 'JOB: '.strip_tags(trim(preg_replace('/\r\n|\r|\n/', ' ', $out))).PHP_EOL;
             echo date(cron::$format).' Executed Job ID #'.$job->id.' "'.$job->target.'"'.PHP_EOL;
           }
         } else {

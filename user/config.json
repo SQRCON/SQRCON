@@ -30,7 +30,7 @@
     {
       "id" : "dosomething",
       "name" : "Some JOB to do",
-      "schedule" : "*/5 * * * *",
+      "schedule" : "* * * * *",
       "target" : "test.cron.php?msg=HELLO"
     }
   ]
