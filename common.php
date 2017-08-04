@@ -27,7 +27,8 @@
       
       define('HOME', $tmp);
       define('DEBUG', false);
-           
+      
+      common::load(CORE.DIRECTORY_SEPARATOR.'inc');
       common::load(CORE);
       session::construct();
     }

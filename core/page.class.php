@@ -46,7 +46,7 @@ class page
     
     echo '<div class="navbar navbar-inverse navbar-fixed-top display-xs display-sm display-md display-lg" role="navigation">';
     echo '<div class="navbar-header">';
-    echo '<a class="navbar-brand" href="'.URL_SEPARATOR.'"><img style="max-width:30px; margin-top: -7px;" src="'.HOME.'/core/img/brand/favicon-32x32.png"> '.rb::get('core.name').'</a>';
+    echo '<a class="navbar-brand" href="'.HOME.'"><img style="max-width:30px; margin-top: -7px;" src="'.HOME.'/core/img/brand/favicon-32x32.png"> '.rb::get('core.name').'</a>';
     echo '</div>';
     // START RIGHT
     echo '<div class="navbar-right '.self::$devices.'">';
@@ -54,6 +54,32 @@ class page
     // RENDER RIGHT
 
     echo '</ul>';
+    if (user::loggedin()) {
+      echo '<div class="user-img-box pull-right dropdown">';
+      echo '<a class="dropdown-toggle" data-toggle="dropdown" href="#">';
+      echo '<img id="profile-img" class="user-img" src="'.user::get('avatar').'" />';
+      echo '</a>';
+      echo '<ul class="dropdown-menu" aria-labelledby="usermenu">';
+      echo '<li class="user-name"><a href="'.user::get('profileurl').'" target="_blank"><span class="fa navbar-fa fa-steam" aria-hidden="true"></span> '.rb::get('core.steam_profile', array(user::get('personaname'))).'</a></li>';
+      echo '<li role="separator" class="divider"></li>';
+      
+      if (strlen($_SERVER['QUERY_STRING']) == 0) {
+        $_SERVER['REQUEST_URI'] .= '?logout';
+      } else {
+        $_SERVER['REQUEST_URI'] .= '&logout';
+      }     
+      
+      echo '<li><a href="'.$_SERVER['REQUEST_URI'].'"><span class="fa navbar-fa fa-sign-out" aria-hidden="true"></span> '.rb::get('core.logout').'</a></li>';
+      echo '</ul>';
+      echo '</div>';
+    } else {
+      if (strlen($_SERVER['QUERY_STRING']) == 0) {
+        $_SERVER['REQUEST_URI'] .= '?login';
+      } else {
+        $_SERVER['REQUEST_URI'] .= '&login';
+      }     
+      echo '<a href="'.$_SERVER['REQUEST_URI'].'" type="_self"><button type="button" class="btn btn-success" style="margin-top: 7px; margin-right: 5px">'.rb::get('core.login', array('<span class="fa navbar-fa fa-steam-square" aria-hidden="true"></span>')).'</button></a>';
+    }
     echo '</div>';
     // END RIGHT
     // START LEFT
