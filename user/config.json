@@ -18,7 +18,12 @@
     {
       "dashboard" : "user",
       "target" : "dialog.php?action=debug",
-      "grid" : "1 12 12 right 1"
+      "grid" : {
+        "row" : 0, 
+        "size" : [ 12 ], 
+        "position" : 0, 
+        "order" : 0
+        }
     }
   ]
 }

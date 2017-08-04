@@ -25,32 +25,22 @@ class panel
           if (isset($tmp->widget)) {
             foreach ($tmp->widget as $widget) {
               if ($widget->dashboard == $dashboard) {
-                $target = BASE.DIRECTORY_SEPARATOR.$item.DIRECTORY_SEPARATOR.$widget->target;              
-                $parts = explode(' ', $widget->grid);
-                if (sizeof($parts) == 5) {
-                  if (array_key_exists($parts[0], $fieldset)) {
-                    if ($parts[3] == 'left') {
-                      while (isset($fieldset[$parts[0]][$parts[3].'-col-sm-'.$parts[1]][$parts[4]])) {
-                        $parts[4] += 1;
-                      };
-                      $fieldset[$parts[0]][$parts[3].'-col-sm-'.$parts[1]][$parts[4]] = $target;
-                    } elseif ($parts[3] == 'right') {
-                      while (isset($fieldset[$parts[0]][$parts[3].'-col-sm-'.$parts[2]][$parts[4]])) {
-                        $parts[4] += 1;
-                      };
-                      $fieldset[$parts[0]][$parts[3].'-col-sm-'.$parts[2]][$parts[4]] = $target;
-                    }
-                  } else {
-                    if ($parts[1] == '12' && $parts[2] == '0') {
-                      $fieldset[$parts[0]] = array($parts[3].'-col-sm-'.$parts[1] => array($parts[4] => $target));
-                    } else {
-                      if ($parts[3] == 'left') {
-                        $fieldset[$parts[0]] = array('left-col-sm-'.$parts[1] => array($parts[4] => $target), 'right-col-sm-'.$parts[2] => array());
-                      } elseif ($parts[3] == 'right') {
-                        $fieldset[$parts[0]] = array('left-col-sm-'.$parts[1] => array(), 'right-col-sm-'.$parts[2] => array($parts[4] => $target));
-                      }
-                    }
+                $target = BASE.DIRECTORY_SEPARATOR.$item.DIRECTORY_SEPARATOR.$widget->target;
+                if (array_key_exists($widget->grid->row, $fieldset)) {
+                  $position = $widget->grid->position.'-col-sm-'.$widget->grid->size[$widget->grid->position];
+                  while(isset($fieldset[$widget->grid->row][$position][$widget->grid->order])) {
+                    $widget->grid->order++;
                   }
+                  $fieldset[$widget->grid->row][$position][$widget->grid->order] = $target;
+                } else {
+                  $i = 0;
+                  $fieldset[$widget->grid->row] = array();
+                  foreach ($widget->grid->size as $size) {
+                    $fieldset[$widget->grid->row][$i.'-col-sm-'.$size] = array();
+                    $i++;
+                  }
+                  $position = $widget->grid->position.'-col-sm-'.$widget->grid->size[$widget->grid->position];
+                  $fieldset[$widget->grid->row][$position][$widget->grid->order] = $target;
                 }
               }
             }
@@ -63,39 +53,29 @@ class panel
               if (isset($tmp->widget)) {
                 foreach ($tmp->widget as $widget) {
                   if ($widget->dashboard == $dashboard) {
-                    $target = BASE.DIRECTORY_SEPARATOR.$item.DIRECTORY_SEPARATOR.$subitem.DIRECTORY_SEPARATOR.$widget->target;              
-                    $parts = explode(' ', $widget->grid);
-                    if (sizeof($parts) == 5) {
-                      if (array_key_exists($parts[0], $fieldset)) {
-                        if ($parts[3] == 'left') {
-                          while (isset($fieldset[$parts[0]][$parts[3].'-col-sm-'.$parts[1]][$parts[4]])) {
-                            $parts[4] += 1;
-                          };
-                          $fieldset[$parts[0]][$parts[3].'-col-sm-'.$parts[1]][$parts[4]] = $target;
-                        } elseif ($parts[3] == 'right') {
-                          while (isset($fieldset[$parts[0]][$parts[3].'-col-sm-'.$parts[2]][$parts[4]])) {
-                            $parts[4] += 1;
-                          };
-                          $fieldset[$parts[0]][$parts[3].'-col-sm-'.$parts[2]][$parts[4]] = $target;
-                        }
-                      } else {
-                        if ($parts[1] == '12' && $parts[2] == '0') {
-                          $fieldset[$parts[0]] = array($parts[3].'-col-sm-'.$parts[1] => array($parts[4] => $target));
-                        } else {
-                          if ($parts[3] == 'left') {
-                            $fieldset[$parts[0]] = array('left-col-sm-'.$parts[1] => array($parts[4] => $target), 'right-col-sm-'.$parts[2] => array());
-                          } elseif ($parts[3] == 'right') {
-                            $fieldset[$parts[0]] = array('left-col-sm-'.$parts[1] => array(), 'right-col-sm-'.$parts[2] => array($parts[4] => $target));
-                          }
-                        }
+                    $target = BASE.DIRECTORY_SEPARATOR.$item.DIRECTORY_SEPARATOR.$subitem.DIRECTORY_SEPARATOR.$widget->target;
+                    if (array_key_exists($widget->grid->row, $fieldset)) {
+                      $position = $widget->grid->position.'-col-sm-'.$widget->grid->size[$widget->grid->position];
+                      while(isset($fieldset[$widget->grid->row][$position][$widget->grid->order])) {
+                        $widget->grid->order++;
                       }
+                      $fieldset[$widget->grid->row][$position][$widget->grid->order] = $target;
+                    } else {
+                      $i = 0;
+                      $fieldset[$widget->grid->row] = array();
+                      foreach ($widget->grid->size as $size) {
+                        $fieldset[$widget->grid->row][$i.'-col-sm-'.$size] = array();
+                        $i++;
+                      }
+                      $position = $widget->grid->position.'-col-sm-'.$widget->grid->size[$widget->grid->position];
+                      $fieldset[$widget->grid->row][$position][$widget->grid->order] = $target;
                     }
                   }
                 }
               }
             }
           }
-        } 
+        }
       }
     }
     
@@ -104,7 +84,9 @@ class panel
     foreach ($fieldset as $key => $row) {
       echo '<div class="row">';
       foreach ($row as $key => $column) {
-        echo '<div class="'.str_replace(array('left-', 'right-'), array('',''), $key).'">';
+        $tmp = explode('-', $key);
+        unset($tmp[0]);
+        echo '<div class="'.implode('-', $tmp).'">';
         ksort($column);
         foreach ($column as $key => $panel) {
           $offset = strpos($panel, '?');
