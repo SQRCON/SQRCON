@@ -1,4 +1,3 @@
-data/*
-!data/README
-!data/index.php
-!data/cache/README
+config.php
+cache/*
+!cache/README
