@@ -2,7 +2,7 @@
   
 class user
 {
-  public static function loggedin()
+  public static function authenicated()
   {
     return ((session::read(static::class.'.id') != null) ? true : false);
   }
@@ -10,7 +10,7 @@ class user
   public static function construct($id)
   {
     session::write(static::class.'.id', $id);
-    foreach(steam::getuser($id) as $key => $value) {
+    foreach (steam::getuser($id) as $key => $value) {
       session::write(static::class.'.'.$key, $value);
     }
   }
@@ -33,7 +33,7 @@ class user
     }
   }
   
-  public static function deconstruct()
+  public static function destroy()
   {
     session::delete(static::class.'.id');
   }

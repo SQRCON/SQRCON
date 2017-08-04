@@ -1,11 +1,12 @@
 <?php
   require_once(dirname(realpath(__FILE__)).DIRECTORY_SEPARATOR.'config.php');
-  
+   
   common::construct();
   class common
   {
     public static function construct()
     {
+      set_exception_handler(array('common', 'errorhandler'));
       define('COOKIE_LIFETIME', 60*60*24*7*4*3);
       
       define('BASE', dirname(realpath(__FILE__)));
@@ -39,6 +40,20 @@
         if (is_file($path.DIRECTORY_SEPARATOR.$include) && strpos($path.DIRECTORY_SEPARATOR.$include, '.class.') !== false && strtoupper(pathinfo($include, PATHINFO_EXTENSION)) == 'PHP') {
           require_once($path.DIRECTORY_SEPARATOR.$include);
         }
+      }
+    }
+    
+    public static function errorhandler($ex) {
+      echo '<h1>Error detected - '.$ex->getCode().'</h1>';
+      echo '<b>Exception:</b> '.$ex->getMessage().'<br>';
+      echo '<b>Trace:</b> ';
+      echo $ex->getFile().' on line '.$ex->getLine().'<br>';
+      foreach ($ex->getTrace() as $key => $value) {
+        echo '- '.$value['file'].' on line '.$value['line'].'<br>';
+      }
+      echo '<br><hr><br><b>SERVER:</b><br>';
+      foreach ($_SERVER as $key => $value) {
+        echo $key.'='.$value.'<br>';
       }
     }
   }

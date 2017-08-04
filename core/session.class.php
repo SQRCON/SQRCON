@@ -11,20 +11,16 @@ class session
     session_start();
     
     if (isset($_GET['login'])) {
-      auth::secure();
+      auth::login();
     }
     if (isset($_GET['logout'])) {
       auth::logout();
-      session_destroy();
-      $tmp = explode(URL_SEPARATOR, $_SERVER['SCRIPT_NAME']);
-      $query = array();
-      foreach (explode('&', $_SERVER['QUERY_STRING']) as $key => $value) {
-        if ($value != 'logout') {
-          array_push($query, $value);
-        }
-      }
-      header('Location: '.$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].URL_SEPARATOR.implode(URL_SEPARATOR, array_splice($tmp, 1, -1)).URL_SEPARATOR.'?'.implode('&', $query));
     }
+  }
+  
+  public static function destroy()
+  {
+    session_destroy();
   }
   
   public static function read($key)
