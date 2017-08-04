@@ -25,5 +25,13 @@
         "order" : 0
         }
     }
+  ],
+  "cron" : [
+    {
+      "id" : "dosomething",
+      "name" : "Some JOB to do",
+      "schedule" : "* * * * *",
+      "command" : "php -f ./test.cron.php"
+    }
   ]
 }

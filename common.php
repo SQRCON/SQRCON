@@ -18,17 +18,21 @@
       define('TABLE_PREFIX', '');
       define('URL_SEPARATOR', '/');
       
-      $urlparts = explode(URL_SEPARATOR, $_SERVER['REQUEST_URI']);
-      $baseparts = explode(DIRECTORY_SEPARATOR, str_replace($_SERVER['DOCUMENT_ROOT'], '', BASE));
-      
-      $tmp = '';
-      foreach ($urlparts as $key => $value) {
-        if (in_array($value, $baseparts)) {
-          $tmp .= URL_SEPARATOR.$value;
+      if (isset($_SERVER['REQUEST_URI'])) {
+        $urlparts = explode(URL_SEPARATOR, $_SERVER['REQUEST_URI']);
+        $baseparts = explode(DIRECTORY_SEPARATOR, str_replace($_SERVER['DOCUMENT_ROOT'], '', BASE));
+        
+        $tmp = '';
+        foreach ($urlparts as $key => $value) {
+          if (in_array($value, $baseparts)) {
+            $tmp .= URL_SEPARATOR.$value;
+          }
         }
+        
+        define('HOME', $tmp);
+      } else {
+        define('HOME', null);
       }
-      
-      define('HOME', $tmp);
       define('DEBUG', false);
       
       common::load(CORE.DIRECTORY_SEPARATOR.'inc');
