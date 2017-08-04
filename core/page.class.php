@@ -16,7 +16,12 @@ class page
     echo '<meta name="viewport" content="width=device-width, initial-scale=1">';
     echo '<head>';
 
-    echo '<title>'.rb::get('core.name').'</title>';
+    if (file_exists(dirname($_SERVER['SCRIPT_FILENAME']).DIRECTORY_SEPARATOR.'config.json')) {
+      $module = json_decode(file_get_contents(dirname($_SERVER['SCRIPT_FILENAME']).DIRECTORY_SEPARATOR.'config.json'));
+      echo '<title>'.rb::get('core.name').' - '.rb::get($module->id.'.name').'</title>';
+    } else {
+      echo '<title>'.rb::get('core.name').'</title>';
+    }
     
     echo '<link rel="icon" type="image/x-icon" href="'.HOME.'/favicon.ico" />';
     echo '<meta name="robots" content="noindex">';
@@ -44,48 +49,128 @@ class page
     echo '</head>';
     echo '<body '.(isset($onload)?'onload="'.$onload.'"':'').'>';
     
+    $menuright = array('public' => array(), 'private' => array());
+    $menuleft = array('public' => array(), 'private' => array());
+    foreach (scandir(BASE) as $item) {
+      if (is_dir(BASE.DIRECTORY_SEPARATOR.$item) && $item != '.') {
+        if (file_exists(BASE.DIRECTORY_SEPARATOR.$item.DIRECTORY_SEPARATOR.'config.json')) {
+          $tmp = json_decode(file_get_contents(BASE.DIRECTORY_SEPARATOR.$item.DIRECTORY_SEPARATOR.'config.json'));
+          if (isset($tmp->menu)) {
+            foreach ($tmp->menu as $menu) {
+              if ($menu->position == 'left') {
+                if (!array_key_exists($menu->order, $menuleft)) {
+                  if ($menu->authenticated) {
+                    $menuleft['private'][$menu->order] = $item.DIRECTORY_SEPARATOR.$menu->target;
+                  } else {
+                    $menuleft['public'][$menu->order] = $item.DIRECTORY_SEPARATOR.$menu->target;
+                  }
+                }
+              } elseif ($menu->position == 'right') {
+                if (!array_key_exists($menu->order, $menuright)) {
+                  if ($menu->authenticated) {
+                    $menuright['private'][$menu->order] = $item.DIRECTORY_SEPARATOR.$menu->target;
+                  } else {
+                    $menuright['public'][$menu->order] = $item.DIRECTORY_SEPARATOR.$menu->target;
+                  }
+                }
+              }
+            }
+          }
+        }
+        foreach (scandir(BASE.DIRECTORY_SEPARATOR.$item) as $subitem) {
+          if (is_dir(BASE.DIRECTORY_SEPARATOR.$item.DIRECTORY_SEPARATOR.$subitem) && $subitem != '.' && $item != 'core') {
+            if (file_exists(BASE.DIRECTORY_SEPARATOR.$item.DIRECTORY_SEPARATOR.$subitem.DIRECTORY_SEPARATOR.'config.json')) {
+              $tmp = json_decode(file_get_contents(BASE.DIRECTORY_SEPARATOR.$item.DIRECTORY_SEPARATOR.$subitem.DIRECTORY_SEPARATOR.'config.json'));
+              if (isset($tmp->menu)) {
+                foreach ($tmp->menu as $menu) {
+                  if ($menu->position == 'left') {
+                    if (!array_key_exists($menu->order, $menuleft)) {
+                      if ($menu->authenticated) {
+                        $menuleft['private'][$menu->order] = $item.DIRECTORY_SEPARATOR.$subitem.DIRECTORY_SEPARATOR.$menu->target;
+                      } else {
+                        $menuleft['public'][$menu->order] = $item.DIRECTORY_SEPARATOR.$subitem.DIRECTORY_SEPARATOR.$menu->target;
+                      }
+                    }
+                  } elseif ($menu->position == 'right') {
+                    if (!array_key_exists($menu->order, $menuright)) {
+                      if ($menu->authenticated) {
+                        $menuright['private'][$menu->order] = $item.DIRECTORY_SEPARATOR.$subitem.DIRECTORY_SEPARATOR.$menu->target;
+                      } else {
+                        $menuright['public'][$menu->order] = $item.DIRECTORY_SEPARATOR.$subitem.DIRECTORY_SEPARATOR.$menu->target;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    
     echo '<div class="navbar navbar-inverse navbar-fixed-top display-xs display-sm display-md display-lg" role="navigation">';
     echo '<div class="navbar-header">';
     echo '<a class="navbar-brand" href="'.HOME.'"><img style="max-width:30px; margin-top: -7px;" src="'.HOME.'/core/img/brand/favicon-32x32.png"> '.rb::get('core.name').'</a>';
     echo '</div>';
     // START RIGHT
     echo '<div class="navbar-right '.self::$devices.'">';
+    if (user::isauthenicated()) {
+      $menuright = $menuright['private'];
+    } else {
+      $menuright = $menuright['public'];
+    }
     echo '<ul class="nav navbar-nav">';
     // RENDER RIGHT
-
-    echo '</ul>';
-    if (user::isauthenicated()) {
-      echo '<div class="user-img-box pull-right dropdown">';
-      echo '<a class="dropdown-toggle" data-toggle="dropdown" href="#">';
-      echo '<img id="profile-img" class="user-img" src="'.user::selfread('avatar').'" />';
-      echo '</a>';
-      echo '<ul class="dropdown-menu" aria-labelledby="usermenu">';
-      echo '<li class="user-name"><a href="'.user::selfread('profileurl').'" target="_blank"><span class="fa navbar-fa fa-steam" aria-hidden="true"></span> '.rb::get('core.steam_profile', array(user::selfread('personaname'))).'</a></li>';
-      echo '<li role="separator" class="divider"></li>';
-      
-      if (strlen($_SERVER['QUERY_STRING']) == 0) {
-        $_SERVER['REQUEST_URI'] .= '?logout';
+    ksort($menuright);
+    foreach ($menuright as $item) {
+      $offset = strpos($item, '?');
+      if ($offset !== false) {
+        $params = substr($item, $offset+1);
+        $include = substr($item, 0, $offset);
+        foreach (explode('&', $params) as $value) {
+          $parts = explode('=', $value);
+          if (sizeof($parts) == 2) {
+            $_GET[$parts[0]] = $parts[1];
+          } else {
+            $_GET[$parts[0]] = '';
+          }
+        }
+        include(BASE.DIRECTORY_SEPARATOR.$include);
       } else {
-        $_SERVER['REQUEST_URI'] .= '&logout';
+        include(BASE.DIRECTORY_SEPARATOR.$item);
       }
-      echo '<li><a href="'.$_SERVER['REQUEST_URI'].'"><span class="fa navbar-fa fa-sign-out" aria-hidden="true"></span> '.rb::get('core.logout').'</a></li>';
-      echo '</ul>';
-      echo '</div>';
-    } else {
-      if (strlen($_SERVER['QUERY_STRING']) == 0) {
-        $_SERVER['REQUEST_URI'] .= '?login';
-      } else {
-        $_SERVER['REQUEST_URI'] .= '&login';
-      }
-      echo '<a href="'.$_SERVER['REQUEST_URI'].'" type="_self"><button type="button" class="btn btn-success" style="margin-top: 7px; margin-right: 5px">'.rb::get('core.login', array('<span class="fa navbar-fa fa-steam-square" aria-hidden="true"></span>')).'</button></a>';
     }
+    echo '</ul>';
     echo '</div>';
     // END RIGHT
     // START LEFT
     echo '<div class="navbar-left '.self::$devices.'" stlye="display: none!important;">';
+    if (user::isauthenicated()) {
+      $menuleft = $menuleft['private'];
+    } else {
+      $menuleft = $menuleft['public'];
+    }
     echo '<ul class="nav navbar-nav">';
     // RENDER LEFT
-
+    ksort($menuleft);
+    foreach ($menuleft as $item) {
+      $offset = strpos($item, '?');
+      if ($offset !== false) {
+        $params = substr($item, $offset+1);
+        $include = substr($item, 0, $offset);
+        foreach (explode('&', $params) as $value) {
+          $parts = explode('=', $value);
+          if (sizeof($parts) == 2) {
+            $_GET[$parts[0]] = $parts[1];
+          } else {
+            $_GET[$parts[0]] = '';
+          }
+        }
+        include(BASE.DIRECTORY_SEPARATOR.$include);
+      } else {
+        include(BASE.DIRECTORY_SEPARATOR.$item);
+      }
+    }
     echo '<li><div style="width:10px"></div></li>';
     echo '</ul>';
     echo '</div>';

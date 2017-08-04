@@ -1,0 +1,24 @@
+{
+  "id" : "user",
+  "menu" : [
+      {
+      "position" : "right",
+      "authenticated" : true,
+      "order" : 0,
+      "target" : "dialog.php?action=navright_userprofil"
+      },
+      {
+      "position" : "right",
+      "authenticated" : false,
+      "order" : 0,
+      "target" : "dialog.php?action=navright_guest"
+      }
+    ],
+  "widget" : [
+    {
+      "dashboard" : "user",
+      "target" : "dialog.php?action=debug",
+      "grid" : "1 12 12 right 1"
+    }
+  ]
+}

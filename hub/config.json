@@ -1,0 +1,11 @@
+{
+  "id" : "hub",
+  "menu" : [
+      {
+      "position" : "right",
+      "authenticated" : true,
+      "order" : 1,
+      "target" : "dialog.php?action=navright"
+      }
+    ]
+}
