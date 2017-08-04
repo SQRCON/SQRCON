@@ -11,10 +11,12 @@ class user
     foreach (steam::getuser($id) as $key => $value) {
       $this->data[$key] =  $value;
     }
-    foreach (steam::getbans($id) as $key => $value) {
-      $this->data[strtolower($key)] =  $value;
+    if (sizeof($this->data) > 0) {
+      foreach (steam::getbans($id) as $key => $value) {
+        $this->data[strtolower($key)] =  $value;
+      }
+      $this->data['playtime'] = steam::getplaytime($id);
     }
-    $this->data['playtime'] = steam::getplaytime($id);
   }
   
   public function read($index = null)

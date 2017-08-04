@@ -28,7 +28,7 @@ class panel
                 $target = BASE.DIRECTORY_SEPARATOR.$item.DIRECTORY_SEPARATOR.$widget->target;
                 if (array_key_exists($widget->grid->row, $fieldset)) {
                   $position = $widget->grid->position.'-col-sm-'.$widget->grid->size[$widget->grid->position];
-                  while(isset($fieldset[$widget->grid->row][$position][$widget->grid->order])) {
+                  while (isset($fieldset[$widget->grid->row][$position][$widget->grid->order])) {
                     $widget->grid->order++;
                   }
                   $fieldset[$widget->grid->row][$position][$widget->grid->order] = $target;
@@ -56,7 +56,7 @@ class panel
                     $target = BASE.DIRECTORY_SEPARATOR.$item.DIRECTORY_SEPARATOR.$subitem.DIRECTORY_SEPARATOR.$widget->target;
                     if (array_key_exists($widget->grid->row, $fieldset)) {
                       $position = $widget->grid->position.'-col-sm-'.$widget->grid->size[$widget->grid->position];
-                      while(isset($fieldset[$widget->grid->row][$position][$widget->grid->order])) {
+                      while (isset($fieldset[$widget->grid->row][$position][$widget->grid->order])) {
                         $widget->grid->order++;
                       }
                       $fieldset[$widget->grid->row][$position][$widget->grid->order] = $target;
