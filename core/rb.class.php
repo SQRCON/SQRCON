@@ -2,32 +2,48 @@
 
 class rb
 {
+  private static $defaultfile = 'lang';
   private static $defaultlanguage = 'en';
 
   public static function get($index, $variables = array())
   {
     $tmp = explode('.', $index);
-    if (sizeof($tmp) == 2) {
-      if ($tmp[0] == 'core') {
-        if (file_exists(CORE.DIRECTORY_SEPARATOR.'core.'.substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2).'.txt')) {
-          $lang = json_decode(file_get_contents(CORE.DIRECTORY_SEPARATOR.'core.'.substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2).'.txt'), true);
-          if (isset($lang[$tmp[1]])) {
-            return rb::parse($lang[$tmp[1]], $variables);
+    $path = BASE;
+    foreach (array_slice($tmp, 0, count($tmp) - 1) as $key => $value) {
+      $path .= DIRECTORY_SEPARATOR.$value;
+    }
+    
+    if (sizeof($tmp) > 1) {
+      $rb = $path.DIRECTORY_SEPARATOR.rb::$defaultfile.'.'.substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2).'.txt';
+      if (file_exists($rb)) {
+        $bundle = json_decode(utf8_encode(file_get_contents($rb)), true);
+        if (isset($bundle[$tmp[1]])) {
+          return rb::parse($bundle[$tmp[1]], $variables);
+        } else {
+          $rb = $path.DIRECTORY_SEPARATOR.rb::$defaultfile.'.'.rb::$defaultlanguage.'.txt';
+          if (file_exists($rb)) {
+            $bundle = json_decode(utf8_encode(file_get_contents($rb)), true);
+            if (isset($bundle[$tmp[1]])) {
+              return rb::parse($bundle[$tmp[1]], $variables);
+            } else {
+              return $index;
+            }
           } else {
             return $index;
           }
-        } else if (file_exists(CORE.DIRECTORY_SEPARATOR.'core.'.rb::$defaultlanguage.'.txt')) {
-          $lang = json_decode(file_get_contents(CORE.DIRECTORY_SEPARATOR.'core.'.rb::$defaultlanguage.'.txt'), true);
-          if (isset($lang[$tmp[1]])) {
-            return rb::parse($lang[$tmp[1]], $variables);
+        }
+      } else {
+        $rb = $path.DIRECTORY_SEPARATOR.rb::$defaultfile.'.'.rb::$defaultlanguage.'.txt';
+        if (file_exists($rb)) {
+          $bundle = json_decode(utf8_encode(file_get_contents($rb)), true);
+          if (isset($bundle[$tmp[1]])) {
+            return rb::parse($bundle[$tmp[1]], $variables);
           } else {
             return $index;
           }
         } else {
           return $index;
         }
-      } else {
-      
       }
     } else {
       return $index;

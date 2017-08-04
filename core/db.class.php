@@ -22,7 +22,7 @@ class db
   {
     $stmt = $this->handle->prepare($query);
     $stmt->execute($data);
-    return $stmt; 
+    return $stmt;
   }
   
   public function read($table, $fields = '*', $conditions = null, $options = array())
@@ -33,20 +33,20 @@ class db
     }
     
     if (sizeof($options) > 0) {
-      if(isset($options['group_by'])) {
+      if (isset($options['group_by'])) {
         $query .= " GROUP BY ".$options['group_by'];
       }
 
-      if(isset($options['order_by'])) {
+      if (isset($options['order_by'])) {
         $query .= " ORDER BY ".$options['order_by'];
-        if(isset($options['order_dir'])) {
+        if (isset($options['order_dir'])) {
           $query .= " ".strtoupper($options['order_dir']);
         }
       }
 
-      if(isset($options['limit_start']) && isset($options['limit'])) {
+      if (isset($options['limit_start']) && isset($options['limit'])) {
         $query .= " LIMIT ".$options['limit_start'].", ".$options['limit'];
-      } else if(isset($options['limit'])) {
+      } elseif (isset($options['limit'])) {
         $query .= " LIMIT ".$options['limit'];
       }
     }
@@ -59,12 +59,12 @@ class db
     if ($conditions != null) {
       if ($this->query('SELECT * FROM '.$table.' WHERE '.$conditions)->rowCount > 0) {
         $fields = '';
-        foreach($data as $key=>$value) {
-          $fields .= $key.'=?,'; 
+        foreach ($data as $key => $value) {
+          $fields .= $key.'=?,';
         }
       
-        $query = 'UPDATE '.$table.' SET '.rtrim($fields,',');
-        if($conditions != null) {
+        $query = 'UPDATE '.$table.' SET '.rtrim($fields, ',');
+        if ($conditions != null) {
           $query .= ' WHERE '.$conditions;
         }
         
@@ -73,20 +73,20 @@ class db
         return $stmt;
       } else {
         $fields = '';
-        foreach($data as $key=>$value) {
+        foreach ($data as $key => $value) {
           $fields .= '?,'; 
         }
         
-        $query = 'INSERT INTO '.$table.' ('.implode(',', array_keys($data)).') VALUES ('.rtrim($fields,',').')';
+        $query = 'INSERT INTO '.$table.' ('.implode(',', array_keys($data)).') VALUES ('.rtrim($fields, ',').')';
         return $this->query($query, array_values($data));
       }
     } else {
       $fields = '';
-      foreach($data as $key=>$value) {
-        $fields .= '?,'; 
+      foreach ($data as $key=>$value) {
+        $fields .= '?,';
       }
       
-      $query = 'INSERT INTO '.$table.' ('.implode(',', array_keys($data)).') VALUES ('.rtrim($fields,',').')';
+      $query = 'INSERT INTO '.$table.' ('.implode(',', array_keys($data)).') VALUES ('.rtrim($fields, ',').')';
       return $this->query($query, array_values($data));
     }
   }

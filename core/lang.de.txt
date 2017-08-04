@@ -1,0 +1,7 @@
+{
+  "name" : "SQRCON",
+  "loading" : "Lade...",
+  "mobile_not_supported" : "Mobile Geräte werden derzeit nicht unterstützt.</b><br>Bitte benutze ein größeres Endgerät.",
+  "tablets_not_supported" : "Tablets werden derzeit nicht unterstützt.</b><br>Bitte benutze ein größeres Endgerät.",
+  "footer" : "(c) {0} daeks - erzeugt in {1}s"
+}
