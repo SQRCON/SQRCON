@@ -74,7 +74,7 @@ class db
       } else {
         $fields = '';
         foreach ($data as $key => $value) {
-          $fields .= '?,'; 
+          $fields .= '?,';
         }
         
         $query = 'INSERT INTO '.$table.' ('.implode(',', array_keys($data)).') VALUES ('.rtrim($fields, ',').')';
@@ -82,7 +82,7 @@ class db
       }
     } else {
       $fields = '';
-      foreach ($data as $key=>$value) {
+      foreach ($data as $key => $value) {
         $fields .= '?,';
       }
       
