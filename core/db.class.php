@@ -125,13 +125,17 @@ class db
       if (isset($array['schema'])) {
         $columns = array();
         $primarykey = '';
+        $indexes = '';
         foreach ($array['schema'] as $item) {
           array_push($columns, '`'.strtoupper($item['name']).'` '.strtoupper($item['type']));
           if (isset($item['primary']) && $item['primary'] == true) {
-            $primarykey = ', PRIMARY KEY (`'.$item['name'].'`)';
+            $primarykey = ', PRIMARY KEY (`'.strtoupper($item['name']).'`)';
+          }
+          if (isset($item['index']) && $item['index'] == true) {
+            $indexes .= ', UNIQUE `'.strtoupper($item['name']).'` (`'.strtoupper($item['name']).'`)';
           }
         }
-        $stmt = $this->query('CREATE TABLE `'.TABLE_PREFIX.$module->id.'` ('.implode(',', $columns).$primarykey.') ENGINE = '.$array['engine']);
+        $stmt = $this->query('CREATE TABLE `'.TABLE_PREFIX.$module->id.'` ('.implode(',', $columns).$primarykey.$indexes.') ENGINE = '.$array['engine']);
       }
     } else {
       if (isset($array['type']) && isset($array['version'])) {
@@ -151,10 +155,13 @@ class db
                   foreach ($array['schema'] as $item) {
                     array_push($columns, '`'.strtoupper($item['name']).'` '.strtoupper($item['type']));
                     if (isset($item['primary']) && $item['primary'] == true) {
-                      $primarykey = ', PRIMARY KEY (`'.$item['name'].'`)';
+                      $primarykey = ', PRIMARY KEY (`'.strtoupper($item['name']).'`)';
+                    }
+                    if (isset($item['index']) && $item['index'] == true) {
+                      $indexes .= ', UNIQUE `'.strtoupper($item['name']).'` (`'.strtoupper($item['name']).'`)';
                     }
                   }
-                  $stmt = $this->query('CREATE TABLE `'.TABLE_PREFIX.$module->id.'` ('.implode(',', $columns).$primarykey.') ENGINE = '.$array['engine']);
+                  $stmt = $this->query('CREATE TABLE `'.TABLE_PREFIX.$module->id.'` ('.implode(',', $columns).$primarykey.$indexes.') ENGINE = '.$array['engine']);
                 }
                 break;
               case 'alter':
