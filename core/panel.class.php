@@ -42,7 +42,7 @@ class panel
           }
         }
       }
-    }    
+    }
     ksort($fieldset);
 
     foreach ($fieldset as $key => $row) {

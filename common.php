@@ -15,7 +15,7 @@
       
       define('STEAM_APPID', 393380);
       
-      define('TABLE_PREFIX', '');
+      define('TABLE_PREFIX', 'sqrcon_');
       define('URL_SEPARATOR', '/');
       
       if (isset($_SERVER['REQUEST_URI'])) {
@@ -38,6 +38,7 @@
       common::load(CORE.DIRECTORY_SEPARATOR.'inc');
       common::load(CORE);
       session::construct();
+      db::instance()->construct();
     }
     
     public static function load($path)
