@@ -1,0 +1,16 @@
+{
+  "name" : "Setup",
+  "title" : "Welcome to SQRCON Setup",
+  "ok" : "Ok",
+  "writable" : "{0} needs to be writable.",
+  "database" : "Please provide your MySQL database details",
+  "database_host" : "MySQL database hostname (ex. localhost)",
+  "database_name" : "MySQL database name",
+  "database_user" : "MySQL database user",
+  "database_pwd" : "MySQL database password",
+  "steam" : "Please provide your STEAM web API key",
+  "steam_apikey" : "STEAM api key",
+  "success" : "Successfully installed",
+  "retry" : "Retry",
+  "invalid_connection" : "Database connection can not be established."
+}

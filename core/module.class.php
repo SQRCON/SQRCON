@@ -31,7 +31,9 @@ class module
   public static function selfread()
   {
     if (file_exists(dirname($_SERVER['SCRIPT_FILENAME']).DIRECTORY_SEPARATOR.module::$config)) {
-      return json_decode(file_get_contents(dirname($_SERVER['SCRIPT_FILENAME']).DIRECTORY_SEPARATOR.module::$config));
+      $output = json_decode(file_get_contents(dirname($_SERVER['SCRIPT_FILENAME']).DIRECTORY_SEPARATOR.module::$config));
+      $output->path = dirname($_SERVER['SCRIPT_FILENAME']);
+      return $output;
     } else {
       return null;
     }

@@ -37,7 +37,7 @@ if (network::get('action') != '') {
       }
       break;
     default:
-      network::error('invalid action - '.network::get('action'));
+      network::error(rb::get('core.invalid_action', array(network::get('action'))));
       break;
   }
 }

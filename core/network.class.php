@@ -6,20 +6,20 @@ class network
 
   public static function success($data = null, $event = null)
   {
-    self::send(200, $data, $event);
+    self::write(200, $data, $event);
   }
 
   public static function error($data, $event = null)
   {
-    self::send(500, $data, $event);
+    self::write(500, $data, $event);
   }
 
   public static function fatal($data, $event = null)
   {
-    self::send(999, $data, $event);
+    self::write(999, $data, $event);
   }
 
-  public static function send($status, $data, $event)
+  public static function write($status, $data, $event)
   {
     $array = array();
     $array['status'] = $status;
@@ -47,7 +47,7 @@ class network
     }
   }
 
-  public static function pingRemoteUrl($url)
+  public static function ping($url)
   {
     $nurl = parse_url($url);
     $socket = @fsockopen($nurl['host'], (isset($nurl['port'])? $nurl['port'] : 80), $errno, $errstr, 5);
@@ -59,12 +59,12 @@ class network
     }
   }
   
-  public static function getRemoteContentLength($url)
+  public static function size($url)
   {
     return (isset(get_headers($url, 1)['Content-Length']) ? get_headers($url, 1)['Content-Length'] : 0);
   }
 
-  public static function getRemoteContent($url, $getstartbytes = false)
+  public static function read($url, $getstartbytes = false)
   {
     if (extension_loaded('curl')) {
       $ch = curl_init();

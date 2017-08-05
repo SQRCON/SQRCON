@@ -1,5 +1,7 @@
 <?php
-  require_once(dirname(realpath(__FILE__)).DIRECTORY_SEPARATOR.'config.php');
+  if (file_exists(dirname(realpath(__FILE__)).DIRECTORY_SEPARATOR.'config.php')) {
+    require_once(dirname(realpath(__FILE__)).DIRECTORY_SEPARATOR.'config.php');
+  }
    
   common::construct();
   class common
@@ -37,6 +39,11 @@
       
       common::load(CORE.DIRECTORY_SEPARATOR.'inc');
       common::load(CORE);
+      $module = module::selfread();
+      if ($module != null) {
+        common::load($module->path);
+      }
+      
       session::construct();
       db::instance()->construct();
     }

@@ -4,6 +4,7 @@ class cron extends cronlib
 {
   public static $time;
   private static $format = 'd.M.Y - H:i:s';
+  private static $offset = 100;
   
   public static function next($schedule = '* * * * *', $time = null)
   {
@@ -45,7 +46,7 @@ class cron extends cronlib
         $pid = CACHE.DIRECTORY_SEPARATOR.$task->id.'.cron';
         $date = null;
         if (file_exists($pid)) {
-          $date = cron::next($task->schedule, filemtime($pid) + 100);
+          $date = cron::next($task->schedule, filemtime($pid) + cron::$offset);
         } else {
           $date = cron::next($task->schedule);
           file_put_contents($pid, '', LOCK_EX);

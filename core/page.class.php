@@ -27,6 +27,9 @@ class page
     echo '<meta name="robots" content="noindex">';
     
     $jsinclude = array(CORE.DIRECTORY_SEPARATOR.'js', CORE);
+    if ($module != null) {
+      array_push($jsinclude, $module->path);
+    }
     foreach ($jsinclude as $path) {
       foreach (scandir($path) as $include) {
         if (is_file($path.DIRECTORY_SEPARATOR.$include) && strpos($include, '..') == 0 && strpos($include, 'min') == 0  && strtoupper(pathinfo($include, PATHINFO_EXTENSION)) == 'JS') {
@@ -37,6 +40,9 @@ class page
     }
   
     $cssinclude = array(CORE.DIRECTORY_SEPARATOR.'css', CORE);
+    if ($module != null) {
+      array_push($cssinclude, $module->path);
+    }
     foreach ($cssinclude as $path) {
       foreach (scandir($path) as $include) {
         if (is_file($path.DIRECTORY_SEPARATOR.$include) && strpos($include, '..') == 0 && strpos($include, 'min') == 0  && strtoupper(pathinfo($include, PATHINFO_EXTENSION)) == 'CSS') {

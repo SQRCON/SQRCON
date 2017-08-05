@@ -6,5 +6,8 @@
   "tablets_not_supported" : "Tablet devices are currently not supported.</b><br>Please use a larger screen environment.",
   "footer" : "(c) {0} daeks - generated in {1}s",
   "steam_profile" : "Profile {0}",
-  "logout" : "Logout"
+  "logout" : "Logout",
+  "close" : "Close",
+  "error" : "Error",
+  "invalid_action" : "Invalid action - {0}"
 }

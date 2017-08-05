@@ -8,7 +8,7 @@ if (network::get('action') != '') {
       echo '<button type="button" class="btn btn-primary" style="margin-top: 7px">'.rb::get('hub.create', array('<span class="fa navbar-fa fa-plus" aria-hidden="true"></span>')).'</button>';
       break;
     default:
-      network::error('invalid action - '.network::get('action'));
+      network::error(rb::get('core.invalid_action', array(network::get('action'))));
       break;
   }
 }
