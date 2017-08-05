@@ -16,8 +16,8 @@ class page
     echo '<meta name="viewport" content="width=device-width, initial-scale=1">';
     echo '<head>';
 
-    if (file_exists(dirname($_SERVER['SCRIPT_FILENAME']).DIRECTORY_SEPARATOR.'config.json')) {
-      $module = json_decode(file_get_contents(dirname($_SERVER['SCRIPT_FILENAME']).DIRECTORY_SEPARATOR.'config.json'));
+    $module = module::selfread();
+    if ($module != null) {
       echo '<title>'.rb::get('core.name').' - '.rb::get($module->id.'.name').'</title>';
     } else {
       echo '<title>'.rb::get('core.name').'</title>';
@@ -51,56 +51,23 @@ class page
     
     $menuright = array('public' => array(), 'private' => array());
     $menuleft = array('public' => array(), 'private' => array());
-    foreach (scandir(BASE) as $item) {
-      if (is_dir(BASE.DIRECTORY_SEPARATOR.$item) && $item != '.') {
-        if (file_exists(BASE.DIRECTORY_SEPARATOR.$item.DIRECTORY_SEPARATOR.'config.json')) {
-          $tmp = json_decode(file_get_contents(BASE.DIRECTORY_SEPARATOR.$item.DIRECTORY_SEPARATOR.'config.json'));
-          if (isset($tmp->menu)) {
-            foreach ($tmp->menu as $menu) {
-              if ($menu->position == 'left') {
-                if (!array_key_exists($menu->order, $menuleft)) {
-                  if ($menu->authenticated) {
-                    $menuleft['private'][$menu->order] = $item.DIRECTORY_SEPARATOR.$menu->target;
-                  } else {
-                    $menuleft['public'][$menu->order] = $item.DIRECTORY_SEPARATOR.$menu->target;
-                  }
-                }
-              } elseif ($menu->position == 'right') {
-                if (!array_key_exists($menu->order, $menuright)) {
-                  if ($menu->authenticated) {
-                    $menuright['private'][$menu->order] = $item.DIRECTORY_SEPARATOR.$menu->target;
-                  } else {
-                    $menuright['public'][$menu->order] = $item.DIRECTORY_SEPARATOR.$menu->target;
-                  }
-                }
+    foreach (module::read() as $key => $tmp) {
+      if (isset($tmp->menu)) {
+        foreach ($tmp->menu as $menu) {
+          if ($menu->position == 'left') {
+            if (!array_key_exists($menu->order, $menuleft)) {
+              if ($menu->authenticated) {
+                $menuleft['private'][$menu->order] = $tmp->path.DIRECTORY_SEPARATOR.$menu->target;
+              } else {
+                $menuleft['public'][$menu->order] = $tmp->path.DIRECTORY_SEPARATOR.$menu->target;
               }
             }
-          }
-        }
-        foreach (scandir(BASE.DIRECTORY_SEPARATOR.$item) as $subitem) {
-          if (is_dir(BASE.DIRECTORY_SEPARATOR.$item.DIRECTORY_SEPARATOR.$subitem) && $subitem != '.' && $item != 'core') {
-            if (file_exists(BASE.DIRECTORY_SEPARATOR.$item.DIRECTORY_SEPARATOR.$subitem.DIRECTORY_SEPARATOR.'config.json')) {
-              $tmp = json_decode(file_get_contents(BASE.DIRECTORY_SEPARATOR.$item.DIRECTORY_SEPARATOR.$subitem.DIRECTORY_SEPARATOR.'config.json'));
-              if (isset($tmp->menu)) {
-                foreach ($tmp->menu as $menu) {
-                  if ($menu->position == 'left') {
-                    if (!array_key_exists($menu->order, $menuleft)) {
-                      if ($menu->authenticated) {
-                        $menuleft['private'][$menu->order] = $item.DIRECTORY_SEPARATOR.$subitem.DIRECTORY_SEPARATOR.$menu->target;
-                      } else {
-                        $menuleft['public'][$menu->order] = $item.DIRECTORY_SEPARATOR.$subitem.DIRECTORY_SEPARATOR.$menu->target;
-                      }
-                    }
-                  } elseif ($menu->position == 'right') {
-                    if (!array_key_exists($menu->order, $menuright)) {
-                      if ($menu->authenticated) {
-                        $menuright['private'][$menu->order] = $item.DIRECTORY_SEPARATOR.$subitem.DIRECTORY_SEPARATOR.$menu->target;
-                      } else {
-                        $menuright['public'][$menu->order] = $item.DIRECTORY_SEPARATOR.$subitem.DIRECTORY_SEPARATOR.$menu->target;
-                      }
-                    }
-                  }
-                }
+          } elseif ($menu->position == 'right') {
+            if (!array_key_exists($menu->order, $menuright)) {
+              if ($menu->authenticated) {
+                $menuright['private'][$menu->order] = $tmp->path.DIRECTORY_SEPARATOR.$menu->target;
+              } else {
+                $menuright['public'][$menu->order] = $tmp->path.DIRECTORY_SEPARATOR.$menu->target;
               }
             }
           }
@@ -123,7 +90,7 @@ class page
     // RENDER RIGHT
     ksort($menuright);
     foreach ($menuright as $item) {
-      common::run(BASE.DIRECTORY_SEPARATOR.$item);
+      common::run($item);
     }
     echo '</ul>';
     echo '</div>';
@@ -139,7 +106,7 @@ class page
     // RENDER LEFT
     ksort($menuleft);
     foreach ($menuleft as $item) {
-      common::run(BASE.DIRECTORY_SEPARATOR.$item);
+      common::run($item);
     }
     echo '<li><div style="width:10px"></div></li>';
     echo '</ul>';

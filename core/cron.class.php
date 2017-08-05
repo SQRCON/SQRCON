@@ -52,7 +52,7 @@ class cron extends cronlib
         }
         if (time() >= $date) {
           if (isset($job->target) && strlen($job->target) > 0) {
-            $job->target = $path.$job->target;
+            $job->target = $path.DIRECTORY_SEPARATOR.$job->target;
             echo date(cron::$format).' Executing Job ID #'.$job->id.' scheduled for '.date(cron::$format, $date).PHP_EOL;
             ob_start();
             common::run($job->target);
