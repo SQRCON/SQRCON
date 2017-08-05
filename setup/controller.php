@@ -23,14 +23,14 @@ if (network::get('action') != '') {
         file_put_contents(BASE.DIRECTORY_SEPARATOR.'config.php', $config);
         
         ob_start();
-        modal::start(rb::get('setup.title'), CONTROLLER.'?action=end', 'GET');
+        modal::start(rb::get('setup.title'), $controller.'?action=end', 'GET');
         echo rb::get('setup.success');
         modal::end(rb::get('setup.ok'), 'success');
         $output = ob_get_clean();
         network::success($output, null);
       } else {
         ob_start();
-        modal::start(rb::get('setup.title'), CONTROLLER.'?action=end', 'GET');
+        modal::start(rb::get('setup.title'), $controller.'?action=end', 'GET');
         if (!is_writeable(BASE)) {
           echo '<div class="alert alert-danger" role="alert"><b>'.rb::get('core.error').'</b> '.rb::get('setup.writable', array(BASE)).'</div>';
         }

@@ -5,7 +5,7 @@ require_once(dirname(realpath(__FILE__)).DIRECTORY_SEPARATOR.'config.php');
 if (network::get('action') != '') {
   switch (network::get('action')) {
     case 'setup':
-      modal::start(rb::get('setup.title'), CONTROLLER.'?action=setup', 'POST', 'modal-content');
+      modal::start(rb::get('setup.title'), $controller.'?action=setup', 'POST', 'modal-content');
       if (!is_writeable(BASE)) {
         echo '<div class="alert alert-danger" role="alert"><b>'.rb::get('core.error').'</b> '.rb::get('setup.writable', array(BASE)).'</div>';
       }
