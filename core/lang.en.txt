@@ -9,5 +9,6 @@
   "logout" : "Logout",
   "close" : "Close",
   "error" : "Error",
-  "invalid_action" : "Invalid action - {0}"
+  "invalid_action" : "Invalid action - {0}",
+  "invalid_steamapi_key" : "Your provided STEAM_APIKEY is invalid."
 }

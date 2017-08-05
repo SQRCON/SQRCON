@@ -5,7 +5,7 @@ require_once(dirname(realpath(__FILE__)).DIRECTORY_SEPARATOR.'config.php');
 if (network::get('action') != '') {
   switch (network::get('action')) {
     case 'init':
-      network::success(''.!file_exists(BASE.DIRECTORY_SEPARATOR.'config.php'));
+      network::success(''.!db::instance()->ping());
       break;
     case 'setup':
       define('DATABASE_HOST', network::post('database_host'));
