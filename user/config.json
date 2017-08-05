@@ -1,20 +1,22 @@
 {
   "id" : "user",
-  "menu" : [
+  "navbits" : [
       {
-      "position" : "right",
-      "authenticated" : true,
-      "order" : 0,
-      "target" : "dialog.php?action=navright_userprofil"
+        "menu" : "core",
+        "position" : "right",
+        "authenticated" : true,
+        "order" : 0,
+        "target" : "dialog.php?action=navright_userprofil"
       },
       {
-      "position" : "right",
-      "authenticated" : false,
-      "order" : 0,
-      "target" : "dialog.php?action=navright_guest"
+        "menu" : "core",
+        "position" : "right",
+        "authenticated" : false,
+        "order" : 0,
+        "target" : "dialog.php?action=navright_guest"
       }
     ],
-  "widget" : [
+  "widgets" : [
     {
       "dashboard" : "user",
       "target" : "dialog.php?action=debug",
@@ -26,7 +28,7 @@
         }
     }
   ],
-  "cron" : [
+  "tasks" : [
     {
       "id" : "dosomething",
       "name" : "Some JOB to do",

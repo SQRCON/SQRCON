@@ -19,8 +19,8 @@ class panel
   {
     $fieldset = array();
     foreach (module::read() as $key => $tmp) {
-      if (isset($tmp->widget)) {
-        foreach ($tmp->widget as $widget) {
+      if (isset($tmp->widgets)) {
+        foreach ($tmp->widgets as $widget) {
           if ($widget->dashboard == $dashboard) {
             $target = $tmp->path.DIRECTORY_SEPARATOR.$widget->target;
             if (array_key_exists($widget->grid->row, $fieldset)) {

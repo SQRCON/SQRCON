@@ -40,29 +40,29 @@ class cron extends cronlib
   
   public static function check($tmp, $path)
   {
-    if (isset($tmp->cron)) {
-      foreach ($tmp->cron as $job) {
-        $pid = CACHE.DIRECTORY_SEPARATOR.$job->id.'.cron';
+    if (isset($tmp->tasks)) {
+      foreach ($tmp->tasks as $task) {
+        $pid = CACHE.DIRECTORY_SEPARATOR.$task->id.'.cron';
         $date = null;
         if (file_exists($pid)) {
-          $date = cron::next($job->schedule, filemtime($pid) + 100);
+          $date = cron::next($task->schedule, filemtime($pid) + 100);
         } else {
-          $date = cron::next($job->schedule);
+          $date = cron::next($task->schedule);
           file_put_contents($pid, '', LOCK_EX);
         }
         if (time() >= $date) {
-          if (isset($job->target) && strlen($job->target) > 0) {
-            $job->target = $path.DIRECTORY_SEPARATOR.$job->target;
-            echo date(cron::$format).' Executing Job ID #'.$job->id.' scheduled for '.date(cron::$format, $date).PHP_EOL;
+          if (isset($task->target) && strlen($task->target) > 0) {
+            $task->target = $path.DIRECTORY_SEPARATOR.$task->target;
+            echo date(cron::$format).' Executing TASKID #'.$task->id.' scheduled for '.date(cron::$format, $date).PHP_EOL;
             ob_start();
-            common::run($job->target);
+            common::run($task->target);
             $out = ob_get_clean();
             touch($pid);
-            echo 'JOB: '.strip_tags(trim(preg_replace('/\r\n|\r|\n/', ' ', $out))).PHP_EOL;
-            echo date(cron::$format).' Executed Job ID #'.$job->id.' "'.$job->target.'"'.PHP_EOL;
+            echo 'TASK: '.strip_tags(trim(preg_replace('/\r\n|\r|\n/', ' ', $out))).PHP_EOL;
+            echo date(cron::$format).' Executed TASKID #'.$task->id.' "'.$task->target.'"'.PHP_EOL;
           }
         } else {
-          echo date(cron::$format).' Skipped Job ID #'.$job->id.' scheduled for '.date(cron::$format, $date).PHP_EOL;
+          echo date(cron::$format).' Skipped TASKID #'.$task->id.' scheduled for '.date(cron::$format, $date).PHP_EOL;
         }
       }
     }

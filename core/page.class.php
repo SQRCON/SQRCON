@@ -52,22 +52,24 @@ class page
     $menuright = array('public' => array(), 'private' => array());
     $menuleft = array('public' => array(), 'private' => array());
     foreach (module::read() as $key => $tmp) {
-      if (isset($tmp->menu)) {
-        foreach ($tmp->menu as $menu) {
-          if ($menu->position == 'left') {
-            if (!array_key_exists($menu->order, $menuleft)) {
-              if ($menu->authenticated) {
-                $menuleft['private'][$menu->order] = $tmp->path.DIRECTORY_SEPARATOR.$menu->target;
-              } else {
-                $menuleft['public'][$menu->order] = $tmp->path.DIRECTORY_SEPARATOR.$menu->target;
+      if (isset($tmp->navbits)) {
+        foreach ($tmp->navbits as $menu) {
+          if ($menu->menu == 'core') {
+            if ($menu->position == 'left') {
+              if (!array_key_exists($menu->order, $menuleft)) {
+                if ($menu->authenticated) {
+                  $menuleft['private'][$menu->order] = $tmp->path.DIRECTORY_SEPARATOR.$menu->target;
+                } else {
+                  $menuleft['public'][$menu->order] = $tmp->path.DIRECTORY_SEPARATOR.$menu->target;
+                }
               }
-            }
-          } elseif ($menu->position == 'right') {
-            if (!array_key_exists($menu->order, $menuright)) {
-              if ($menu->authenticated) {
-                $menuright['private'][$menu->order] = $tmp->path.DIRECTORY_SEPARATOR.$menu->target;
-              } else {
-                $menuright['public'][$menu->order] = $tmp->path.DIRECTORY_SEPARATOR.$menu->target;
+            } elseif ($menu->position == 'right') {
+              if (!array_key_exists($menu->order, $menuright)) {
+                if ($menu->authenticated) {
+                  $menuright['private'][$menu->order] = $tmp->path.DIRECTORY_SEPARATOR.$menu->target;
+                } else {
+                  $menuright['public'][$menu->order] = $tmp->path.DIRECTORY_SEPARATOR.$menu->target;
+                }
               }
             }
           }

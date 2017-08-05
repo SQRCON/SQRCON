@@ -1,11 +1,12 @@
 {
   "id" : "hub",
-  "menu" : [
+  "navbits" : [
       {
-      "position" : "right",
-      "authenticated" : true,
-      "order" : 1,
-      "target" : "dialog.php?action=navright"
+        "menu" : "core",
+        "position" : "right",
+        "authenticated" : true,
+        "order" : 1,
+        "target" : "dialog.php?action=navright"
       }
     ]
 }
