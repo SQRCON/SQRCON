@@ -8,5 +8,11 @@
         "order" : 1,
         "target" : "dialog.php?action=navright"
       }
-    ]
+    ],
+  "permissions": {
+    "hub" : ["create", "modify", "delete" ],
+    "default" : { 
+      "hub" : [ "create" ]
+    }
+  }
 }

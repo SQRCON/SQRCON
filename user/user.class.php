@@ -42,6 +42,19 @@ class user
         session::write('self.'.strtolower($key), $value);
       }
       session::write('self.playtime', steam::getplaytime($id));
+      $permissions = array();
+      foreach (module::read() as $key => $tmp) {
+        if (isset($tmp->permissions)) {
+          if (isset($tmp->permissions->default)) {
+            foreach ($tmp->permissions->default as $key => $value) {
+              foreach ($value as $subkey => $subvalue) {
+                array_push($permissions, $key.'.'.$subvalue);
+              }
+            }
+          }
+        }
+      }
+      session::write('self.permissions', implode(",", $permissions));
     } else {
       throw new Exception(rb::get('core.invalid_steamapi_key'));
     }
@@ -59,6 +72,15 @@ class user
   public static function isauthenicated()
   {
     return ((session::read('self.steamid') != null) ? true : false);
+  }
+  
+  public static function haspermission($permission)
+  {
+    if (session::read('self.permissions') != null) {
+      return (in_array($permission, explode(",", session::read('self.permissions'))) ? true : false);
+    } else {
+      return false;
+    }
   }
   
   public static function selfread($key)

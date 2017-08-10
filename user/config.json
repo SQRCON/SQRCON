@@ -35,5 +35,8 @@
       "schedule" : "* * * * *",
       "target" : "test.cron.php?msg=HELLO"
     }
-  ]
+  ],
+  "permissions" : {
+    "user" : [ "premium", "beta" ]
+  }
 }

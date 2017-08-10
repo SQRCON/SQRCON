@@ -39,6 +39,9 @@
       
       common::load(CORE.DIRECTORY_SEPARATOR.'inc');
       common::load(CORE);
+      foreach (module::read(false) as $key => $module) {
+        common::load($module->path);
+      }
       $module = module::selfread();
       if ($module != null) {
         common::load($module->path);
@@ -52,7 +55,9 @@
     {
       foreach (scandir($path) as $include) {
         if (is_file($path.DIRECTORY_SEPARATOR.$include) && strpos($path.DIRECTORY_SEPARATOR.$include, '.class.') !== false && strtoupper(pathinfo($include, PATHINFO_EXTENSION)) == 'PHP') {
-          require_once($path.DIRECTORY_SEPARATOR.$include);
+          if (!class_exists(rtrim(pathinfo($include, PATHINFO_FILENAME), '.class'))) {
+            require_once($path.DIRECTORY_SEPARATOR.$include);
+          }
         }
       }
     }
