@@ -87,7 +87,7 @@ class db
   public function write($table, $data, $conditions = null)
   {
     if ($conditions != null) {
-      if ($this->query('SELECT * FROM `'.TABLE_PREFIX.$table.'` WHERE '.$conditions)->rowCount > 0) {
+      if ($this->query('SELECT * FROM `'.TABLE_PREFIX.$table.'` WHERE '.$conditions)->rowCount() > 0) {
         $fields = '';
         foreach ($data as $key => $value) {
           $fields .= $key.'=?,';
@@ -144,17 +144,18 @@ class db
       if (isset($array['schema'])) {
         $columns = array();
         $primarykey = '';
-        $indexes = '';
         foreach ($array['schema'] as $item) {
           array_push($columns, '`'.strtoupper($item['name']).'` '.strtoupper($item['type']));
           if (isset($item['primary']) && $item['primary'] == true) {
             $primarykey = ', PRIMARY KEY (`'.strtoupper($item['name']).'`)';
           }
-          if (isset($item['index']) && $item['index'] == true) {
-            $indexes .= ', UNIQUE `'.strtoupper($item['name']).'` (`'.strtoupper($item['name']).'`)';
+        }
+        $stmt = $this->query('CREATE TABLE `'.TABLE_PREFIX.$name.'` ('.implode(',', $columns).$primarykey.') ENGINE = '.$array['engine']);
+        if (isset($array['index'])) {
+          foreach ($array['index'] as $item) {
+            $stmt = $this->query('ALTER TABLE `'.TABLE_PREFIX.$name.'` ADD INDEX `'.$item['name'].'` ('.implode(',', $item['schema']).')');
           }
         }
-        $stmt = $this->query('CREATE TABLE `'.TABLE_PREFIX.$name.'` ('.implode(',', $columns).$primarykey.$indexes.') ENGINE = '.$array['engine']);
       }
     } else {
       if (isset($array['type']) && isset($array['version'])) {
@@ -167,7 +168,7 @@ class db
                 case 'create':
                   $stmt = $this->query('DROP TABLE `'.TABLE_PREFIX.$name.'`');
                   $stmt = $this->query('DELETE FROM `'.TABLE_PREFIX.'schema` WHERE ID = '.$this->quote($name));
-                  $stmt = $this->write('schema', array('NAME' => $name, 'VERSION' => $array['version']));
+                  $stmt = $this->write('schema', array('VERSION' => $array['version']), 'name = '.$this->quote($name));
                   if (isset($array['schema'])) {
                     $columns = array();
                     $primarykey = '';
@@ -176,17 +177,25 @@ class db
                       if (isset($item['primary']) && $item['primary'] == true) {
                         $primarykey = ', PRIMARY KEY (`'.strtoupper($item['name']).'`)';
                       }
-                      if (isset($item['index']) && $item['index'] == true) {
-                        $indexes .= ', UNIQUE `'.strtoupper($item['name']).'` (`'.strtoupper($item['name']).'`)';
+                    }
+                    $stmt = $this->query('CREATE TABLE `'.TABLE_PREFIX.$name.'` ('.implode(',', $columns).$primarykey.') ENGINE = '.$array['engine']);
+                    if (isset($array['index'])) {
+                      foreach ($array['index'] as $item) {
+                        $stmt = $this->query('ALTER TABLE `'.TABLE_PREFIX.$name.'` ADD INDEX `'.$item['name'].'` ('.implode(',', $item['schema']).')');
                       }
                     }
-                    $stmt = $this->query('CREATE TABLE `'.TABLE_PREFIX.$name.'` ('.implode(',', $columns).$primarykey.$indexes.') ENGINE = '.$array['engine']);
                   }
                   break;
                 case 'alter':
                   $fields = array();
                   foreach ($this->query('desc `'.TABLE_PREFIX.$name.'`')->fetchAll() as $item) {
                     array_push($fields, strtoupper($item['Field']));
+                  }
+                  $indexes = array();
+                  foreach ($this->query('SHOW INDEX FROM `'.TABLE_PREFIX.$name.'`')->fetchAll() as $item) {
+                    if (strtoupper($item['Key_name']) != 'PRIMARY' && !in_array($item['Key_name'], $indexes)) {
+                      array_push($indexes, $item['Key_name']);
+                    }
                   }
 
                   if (isset($array['schema'])) {
@@ -197,11 +206,21 @@ class db
                         unset($fields[array_search(strtoupper($item['name']), $fields)]);
                       }
                     }
+                    foreach ($indexes as $key => $index) {
+                      $stmt = $this->handle->exec('ALTER TABLE `'.TABLE_PREFIX.$name.'` DROP INDEX `'.$index.'`');
+                    }
+                    if (isset($array['index'])) {
+                      foreach ($array['index'] as $item) {
+                        $stmt = $this->query('ALTER TABLE `'.TABLE_PREFIX.$name.'` ADD INDEX `'.$item['name'].'` ('.implode(',', $item['schema']).')');
+                      }
+                    }
                   }
                   $stmt = $this->query('UPDATE `'.TABLE_PREFIX.'schema` SET VERSION = '.$array['version'].' WHERE NAME = '.$this->quote($name));
+                  $stmt = $this->write('schema', array('VERSION' => $array['version']), 'name = '.$this->quote($name));
                   break;
                 case 'clear':
                   $stmt = $this->query('TRUNCATE `'.TABLE_PREFIX.$name.'`');
+                  $stmt = $this->write('schema', array('VERSION' => $array['version']), 'name = '.$this->quote($name));
                   break;
                 case 'drop':
                   $stmt = $this->query('DROP TABLE `'.TABLE_PREFIX.$name.'`');

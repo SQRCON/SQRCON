@@ -12,6 +12,9 @@ if (network::get('action') != '') {
       if (!is_writeable(CACHE)) {
         echo '<div class="alert alert-danger" role="alert"><b>'.rb::get('core.error').'</b> '.rb::get('setup.writable', array(CACHE)).'</div>';
       }
+      if (!is_writeable(DATA)) {
+        echo '<div class="alert alert-danger" role="alert"><b>'.rb::get('core.error').'</b> '.rb::get('setup.writable', array(DATA)).'</div>';
+      }
       echo '<p>'.rb::get('setup.database').'</p>';
       echo form::get(array('id' => 'database_host', 'name' => rb::get('setup.database_host'), 'validator' => 'data-fv-notempty', 'type' => 'string'), '');
       echo form::get(array('id' => 'database_name', 'name' => rb::get('setup.database_name'), 'validator' => 'data-fv-notempty', 'type' => 'string'), '');

@@ -10,8 +10,7 @@
     },
     {
       "name" : "steamid",
-      "type" : "varchar (255) not null",
-      "index" : true
+      "type" : "varchar (255) not null"
     },
     {
       "name" : "personaname",
@@ -58,5 +57,10 @@
       "type" : "int null default '0'"
     }
   ],
-  "data" : [ ]
+  "index" : [
+    {
+      "name" : "steamid",
+      "schema" : [ "steamid" ]
+    }
+  ]
 }
