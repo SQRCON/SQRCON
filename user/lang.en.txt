@@ -1,0 +1,5 @@
+{
+  "name" : "User",
+  "steam_profile" : "Profile {0}",
+  "logout" : "Logout"
+}

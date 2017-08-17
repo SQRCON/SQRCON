@@ -1,0 +1,42 @@
+{
+  "id" : "user",
+  "navbits" : [
+      {
+        "menu" : "core",
+        "position" : "right",
+        "authenticated" : true,
+        "order" : 0,
+        "target" : "dialog.php?action=navright_userprofil"
+      },
+      {
+        "menu" : "core",
+        "position" : "right",
+        "authenticated" : false,
+        "order" : 0,
+        "target" : "dialog.php?action=navright_guest"
+      }
+    ],
+  "widgets" : [
+    {
+      "dashboard" : "user",
+      "target" : "dialog.php?action=debug",
+      "grid" : {
+        "row" : 0, 
+        "size" : [ 12 ], 
+        "position" : 0, 
+        "order" : 0
+        }
+    }
+  ],
+  "tasks" : [
+    {
+      "id" : "dosomething",
+      "name" : "Some JOB to do",
+      "schedule" : "* * * * *",
+      "target" : "test.cron.php?msg=HELLO"
+    }
+  ],
+  "permissions" : {
+    "user" : [ "premium", "beta" ]
+  }
+}
