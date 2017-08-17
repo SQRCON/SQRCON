@@ -14,6 +14,7 @@
       define('BASE', dirname(realpath(__FILE__)));
       define('CORE', BASE.DIRECTORY_SEPARATOR.'core');
       define('CACHE', BASE.DIRECTORY_SEPARATOR.'cache');
+      define('DATA', BASE.DIRECTORY_SEPARATOR.'data');
       
       define('STEAM_APPID', 393380);
       

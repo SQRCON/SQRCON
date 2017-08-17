@@ -2,21 +2,23 @@
 
 class cache
 {
-  public static function write($value, $cache = 24 * 3600)
+  public static function write($key, $value, $read = false, $cache = 24 * 3600)
   {
-    $output = CACHE.DIRECTORY_SEPARATOR.md5($value);
+    $output = CACHE.DIRECTORY_SEPARATOR.md5($key);
     if (file_exists($output)) {
       if (time() - filemtime($output) > $cache || filesize($output) == 0) {
         if (network::ping($value)) {
-          file_put_contents($output, network::read($value));
+          file_put_contents($output, network::read($value), LOCK_EX);
         }
       }
     } else {
       if (network::ping($value)) {
-        file_put_contents($output, network::read($value));
+        file_put_contents($output, network::read($value), LOCK_EX);
       }
     }
-    return cache::read($value);
+    if ($read) {
+      return cache::read($value);
+    }
   }
   
   public static function delete($key)

@@ -10,7 +10,7 @@ class steam
   public static function getuser($id)
   {
     if (defined('STEAM_APIKEY')) {
-      $content = json_decode(cache::write(steam::$profilapi.'?key='.STEAM_APIKEY.'&steamids='.$id), true);
+      $content = json_decode(cache::write('user_'.$id, steam::$profilapi.'?key='.STEAM_APIKEY.'&steamids='.$id, true), true);
       if (isset($content['response']['players'][0])) {
         return $content['response']['players'][0];
       } else {
@@ -24,7 +24,7 @@ class steam
   public static function getbans($id)
   {
     if (defined('STEAM_APIKEY')) {
-      $content = json_decode(cache::write(steam::$banapi.'?key='.STEAM_APIKEY.'&steamids='.$id), true);
+      $content = json_decode(cache::write('bans_'.$id, steam::$banapi.'?key='.STEAM_APIKEY.'&steamids='.$id, true), true);
       if (isset($content['players'][0])) {
         return $content['players'][0];
       } else {
@@ -38,7 +38,7 @@ class steam
   public static function getplayed($id)
   {
     if (defined('STEAM_APIKEY')) {
-      $content = json_decode(cache::write(steam::$playedapi.'?key='.STEAM_APIKEY.'&steamid='.$id), true);
+      $content = json_decode(cache::write('played_'.$id, steam::$playedapi.'?key='.STEAM_APIKEY.'&steamid='.$id, true), true);
       if (isset($content['response']['games'])) {
         return $content['response']['games'];
       } else {
@@ -52,7 +52,7 @@ class steam
   public static function getowned($id)
   {
     if (defined('STEAM_APIKEY')) {
-      $content = json_decode(cache::write(steam::$libapi.'?key='.STEAM_APIKEY.'&steamid='.$id), true);
+      $content = json_decode(cache::write('owned_'.$id, steam::$libapi.'?key='.STEAM_APIKEY.'&steamid='.$id, true), true);
       if (isset($content['response']['games'])) {
         return $content['response']['games'];
       } else {
@@ -66,7 +66,7 @@ class steam
   public static function getplaytime($id, $appid = STEAM_APPID)
   {
     if (defined('STEAM_APIKEY')) {
-      $content = json_decode(cache::write(steam::$libapi.'?key='.STEAM_APIKEY.'&steamid='.$id), true);
+      $content = json_decode(cache::write('playtime_'.$id, steam::$libapi.'?key='.STEAM_APIKEY.'&steamid='.$id, true), true);
       if (isset($content['response']['games'])) {
         $index = array_search($appid, array_column($content['response']['games'], 'appid'));
         if ($index >= 0) {
