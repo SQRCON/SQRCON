@@ -1,5 +1,5 @@
 config.php
-#cache/*
+cache/*
 !cache/README
-#data/*
+data/*
 !data/README
