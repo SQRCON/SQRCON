@@ -140,21 +140,29 @@ class db
     $array = json_decode(file_get_contents($schema), true);
     $name = pathinfo($schema, PATHINFO_FILENAME);
     if (!$this->exists($name)) {
-      $stmt = $this->write('schema', array('NAME' => $name, 'VERSION' => $array['version']));
-      if (isset($array['schema'])) {
-        $columns = array();
-        $primarykey = '';
-        foreach ($array['schema'] as $item) {
-          array_push($columns, '`'.strtoupper($item['name']).'` '.strtoupper($item['type']));
-          if (isset($item['primary']) && $item['primary'] == true) {
-            $primarykey = ', PRIMARY KEY (`'.strtoupper($item['name']).'`)';
-          }
-        }
-        $stmt = $this->query('CREATE TABLE `'.TABLE_PREFIX.$name.'` ('.implode(',', $columns).$primarykey.') ENGINE = '.$array['engine']);
-        if (isset($array['index'])) {
-          foreach ($array['index'] as $item) {
-            $stmt = $this->query('ALTER TABLE `'.TABLE_PREFIX.$name.'` ADD INDEX `'.$item['name'].'` ('.implode(',', $item['schema']).')');
-          }
+      foreach (explode(' ', $array['type']) as $type) {
+        switch ($type) {
+          case 'create':
+            $stmt = $this->write('schema', array('NAME' => $name, 'VERSION' => $array['version']));
+            if (isset($array['schema'])) {
+              $columns = array();
+              $primarykey = '';
+              foreach ($array['schema'] as $item) {
+                array_push($columns, '`'.strtoupper($item['name']).'` '.strtoupper($item['type']));
+                if (isset($item['primary']) && $item['primary'] == true) {
+                  $primarykey = ', PRIMARY KEY (`'.strtoupper($item['name']).'`)';
+                }
+              }
+              $stmt = $this->query('CREATE TABLE `'.TABLE_PREFIX.$name.'` ('.implode(',', $columns).$primarykey.') ENGINE = '.$array['engine']);
+              if (isset($array['index'])) {
+                foreach ($array['index'] as $item) {
+                  $stmt = $this->query('ALTER TABLE `'.TABLE_PREFIX.$name.'` ADD INDEX `'.$item['name'].'` ('.implode(',', $item['schema']).')');
+                }
+              }
+            }
+            break;
+          default:
+            break;
         }
       }
     } else {
@@ -165,10 +173,8 @@ class db
           if ($result['version'] < $array['version']) {
             foreach (explode(' ', $array['type']) as $type) {
               switch ($type) {
-                case 'create':
+                case 'recreate':
                   $stmt = $this->query('DROP TABLE `'.TABLE_PREFIX.$name.'`');
-                  $stmt = $this->query('DELETE FROM `'.TABLE_PREFIX.'schema` WHERE ID = '.$this->quote($name));
-                  $stmt = $this->write('schema', array('VERSION' => $array['version']), 'name = '.$this->quote($name));
                   if (isset($array['schema'])) {
                     $columns = array();
                     $primarykey = '';
@@ -215,20 +221,21 @@ class db
                       }
                     }
                   }
-                  $stmt = $this->query('UPDATE `'.TABLE_PREFIX.'schema` SET VERSION = '.$array['version'].' WHERE NAME = '.$this->quote($name));
-                  $stmt = $this->write('schema', array('VERSION' => $array['version']), 'name = '.$this->quote($name));
                   break;
-                case 'clear':
+                case 'truncate':
                   $stmt = $this->query('TRUNCATE `'.TABLE_PREFIX.$name.'`');
-                  $stmt = $this->write('schema', array('VERSION' => $array['version']), 'name = '.$this->quote($name));
                   break;
                 case 'drop':
                   $stmt = $this->query('DROP TABLE `'.TABLE_PREFIX.$name.'`');
-                  $stmt = $this->query('DELETE FROM `'.TABLE_PREFIX.'schema` WHERE ID = '.$this->quote($name));
                   break;
                 default:
                   break;
               }
+            }
+            if (in_array('drop', explode(' ', $array['type']))) {
+              $stmt = $this->delete('schema', 'name = '.$this->quote($name));
+            } else {
+              $stmt = $this->write('schema', array('VERSION' => $array['version']), 'name = '.$this->quote($name));
             }
           }
         }
