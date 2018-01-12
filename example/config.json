@@ -1,0 +1,17 @@
+{
+  "id" : "example",
+  "navbits" : [
+      {
+        "menu" : "*",
+        "position" : "top-left",
+        "authenticated" : false,
+        "order" : 0,
+        "target" : "dialog.php?action=navleft"
+      }
+    ],
+  "widgets" : [ ],
+  "tasks" : [ ],
+  "permissions" : {
+    "example" : [ ]
+  }
+}

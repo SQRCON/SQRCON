@@ -1,4 +1,0 @@
-{
-  "name" : "Hub",
-  "create" : "{0} Create Hub"
-}
