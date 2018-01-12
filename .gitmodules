@@ -1,0 +1,3 @@
+[submodule "cfx"]
+	path = cfx
+	url = https://github.com/D-NET/CORE
