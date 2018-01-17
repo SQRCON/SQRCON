@@ -6,6 +6,7 @@
   
   define('DATABASE', 'mysql');
   define('SECURITY', 'steam_openid');
+  define('DEBUG', true);
   
   require_once(dirname(realpath(__FILE__)).DIRECTORY_SEPARATOR.FRAMEWORK.DIRECTORY_SEPARATOR.'common.php');
   common::load(BASE.DIRECTORY_SEPARATOR.'include');
