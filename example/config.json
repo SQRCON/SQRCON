@@ -3,13 +3,59 @@
   "navbits" : [
       {
         "menu" : "*",
-        "position" : "top-left",
+        "position" : "topbar-left",
         "authenticated" : false,
         "order" : 0,
         "target" : "dialog.php?action=navleft"
+      },
+      {
+        "menu" : "example",
+        "position" : "sidebar",
+        "authenticated" : false,
+        "order" : 0,
+        "target" : "dialog.php?action=sidebar"
+      },
+      {
+        "menu" : "example",
+        "position" : "sidebar",
+        "authenticated" : false,
+        "order" : 99,
+        "target" : "dialog.php?action=sidemenu"
       }
     ],
-  "widgets" : [ ],
+  "widgets" : [
+      {
+        "dashboard" : "example",
+        "target" : "dialog.php?action=widget",
+        "grid" : {
+          "row" : 1,
+          "format" : [6, 6],
+          "position" : 1,
+          "order" : 0
+        }
+      },
+      {
+        "dashboard" : "example",
+        "target" : "dialog.php?action=widget",
+        "grid" : {
+          "row" : 1,
+          "format" : [6, 6],
+          "position" : 0,
+          "order" : 0
+        }
+      },
+      {
+        "dashboard" : "example",
+        "target" : "dialog.php?action=widget",
+        "grid" : {
+          "row" : 2,
+          "format" : [6, 6],
+          "position" : 1,
+          "order" : 0
+        }
+      }
+  
+    ],
   "tasks" : [ ],
   "permissions" : {
     "example" : [ ]

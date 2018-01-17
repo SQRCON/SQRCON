@@ -1,0 +1,17 @@
+{
+  "id" : "submodule",
+  "navbits" : [
+      {
+        "menu" : "example",
+        "position" : "sidebar",
+        "authenticated" : false,
+        "order" : 1,
+        "target" : "dialog.php?action=submodule"
+      }
+    ],
+  "widgets" : [ ],
+  "tasks" : [ ],
+  "permissions" : {
+    "submodule" : [ ]
+  }
+}
