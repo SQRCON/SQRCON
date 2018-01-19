@@ -3,7 +3,7 @@
   
   page::start();
   sidebar::start('example');
-  panel::dashboard('example');
+  dashboard::construct('example');
   sidebar::end();
   page::end();
 

@@ -1,5 +1,6 @@
 {
   "name" : "Hello World",
-  "testmenu" : "Example Dropdown",
-  "testbit1" : "Example Submenu"
+  "testmenu" : "Example",
+  "testbit1" : "Example Submenu",
+  "header" : "Example Header"
 }
