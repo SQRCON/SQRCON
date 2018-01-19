@@ -23,6 +23,17 @@
         "target" : "dialog.php?action=sidemenu"
       }
     ],
+  "config" : [
+      {
+        "id" : "config",
+        "icon" : "pencil",
+        "target" : "dialog.php?action=config"
+      },
+      {
+        "id" : "config2",
+        "target" : "dialog.php?action=config2"
+      }
+  ],
   "dashboard" : [[6, 6], [6, 6]],
   "widgets" : [
       {
