@@ -1,5 +1,5 @@
 {
-  "id" : "submodule",
+  "id" : "example.submodule",
   "navbits" : [
       {
         "menu" : "example",
@@ -12,6 +12,6 @@
   "widgets" : [ ],
   "tasks" : [ ],
   "permissions" : {
-    "submodule" : [ ]
+    "example.submodule" : [ ]
   }
 }

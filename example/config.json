@@ -23,14 +23,23 @@
         "target" : "dialog.php?action=sidemenu"
       }
     ],
+  "dashboard" : [[6, 6], [6, 6]],
   "widgets" : [
       {
         "dashboard" : "example",
         "target" : "dialog.php?action=widget",
         "grid" : {
-          "row" : 1,
-          "format" : [6, 6],
-          "position" : 1,
+          "row" : 0,
+          "column" : 1,
+          "order" : 0
+        }
+      },
+      {
+        "dashboard" : "example",
+        "target" : "dialog.php?action=widget",
+        "grid" : {
+          "row" : 0,
+          "column" : 0,
           "order" : 0
         }
       },
@@ -39,24 +48,18 @@
         "target" : "dialog.php?action=widget",
         "grid" : {
           "row" : 1,
-          "format" : [6, 6],
-          "position" : 0,
-          "order" : 0
-        }
-      },
-      {
-        "dashboard" : "example",
-        "target" : "dialog.php?action=widget",
-        "grid" : {
-          "row" : 2,
-          "format" : [6, 6],
-          "position" : 1,
+          "column" : 1,
           "order" : 0
         }
       }
-  
     ],
-  "tasks" : [ ],
+  "tasks" : [
+    {
+      "id" : "example",
+      "schedule" : "* * * * *",
+      "target" : "example.task.php"
+    }
+  ],
   "permissions" : {
     "example" : [ ]
   }
