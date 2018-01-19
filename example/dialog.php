@@ -19,6 +19,14 @@ if (network::get('action') != '') {
       sidebar::menubit('test3', rb::get('example.testbit1'), CONTEXT.URL_SEPARATOR.'example'.URL_SEPARATOR, array('icon' => 'signal', 'disabled' => true));
       sidebar::menuend();
       break;
+    case 'config':
+      $output = 'Example Administration Page<br>This is an example.';
+      network::success($output);
+      break;
+    case 'config2':
+      $output = 'Example Administration Page #2';
+      network::success($output);
+      break;
     case 'widget':
       dashboard::widgetstart('Example Widget', 'danger');
       echo '<p>This is an example.</p>';
